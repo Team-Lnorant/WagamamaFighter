@@ -4,26 +4,34 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
-    public GameObject _player;
-    // Start is called before the first frame update
+    private GameObject Player;
+   
     void Start()
     {
-        
-    }
+        this.Player = GameObject.Find("Player");
+}
 
-    // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(_player.transform.position.x, 5, -10); //キャラにカメラの追従処理
+       Camera();
+       CameraRestriction();
+    }
 
-        if (transform.position.x < 0)
-        {
-            transform.position = new Vector3(0, 5, -10);
-        }
+    private void Camera()
+    {
+        //キャラにカメラの追従処理
+        Vector3 PlayerPos = this.Player.transform.position;
+        transform.position = new Vector3(PlayerPos.x, PlayerPos.y, -10);
+    }
+    private void CameraRestriction() { 
+        //画面外を映さない為の処理
+        if (transform.position.x < 1)
+            transform.position = new Vector3(1 , 0, -10);
 
-        if (transform.position.x >= 18)
-        {
-            transform.position = new Vector3(18, 5, -10);
-        }
+        if (transform.position.x >= 180)
+            transform.position = new Vector3(180, 0, -10);
+
     }
 }
+
+
