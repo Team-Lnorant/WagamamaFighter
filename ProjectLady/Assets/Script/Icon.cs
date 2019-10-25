@@ -47,7 +47,7 @@ public class Icon : MonoBehaviour
     private void IconSetPosition()
     {
         Vector3 vec = _lady.transform.position;
-        vec.x = vec.x + 0.3f;
+        vec.x = vec.x + 0.5f;
         vec.y = vec.y + 1.0f;
         transform.position = vec;
     }

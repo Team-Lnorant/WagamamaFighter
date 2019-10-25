@@ -5,17 +5,17 @@ using UnityEngine;
 public class Camera : MonoBehaviour
 {
 
-    private GameObject _lady;
+    private Player _player;
 
     void Start()
     {
-        _lady = GameObject.Find("Lady");
+        _player = FindObjectOfType<Player>();
     }
 
     void Update()
     {
-        Vector3 _ladyPos = this._lady.transform.position;
+        Vector3 _playerPos = this._player.transform.position;
         transform.position = new Vector3(
-            _ladyPos.x, _ladyPos.y, transform.position.z);
+            _playerPos.x, _playerPos.y, transform.position.z);
     }
 }
