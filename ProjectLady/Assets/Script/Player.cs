@@ -25,11 +25,15 @@ public class Player : MonoBehaviour
     private Item currentItem;
 
     private ItemWindow itemWindow;
-
-
+    private GameControl gameControl;
 
     //アニメーターコンポーネント変数
     Animator animator;
+
+    private void Awake()
+    {
+        gameControl = FindObjectOfType<GameControl>();
+    }
 
     void Start()
     {
@@ -49,8 +53,9 @@ public class Player : MonoBehaviour
         transform.localScale = SetPlayerDirection();　//オブジェクトの大きさを取得する関数
         DirectionUpdate();　//プレイヤーの向きをスティックの入力値で変更する関数
         InputKey(); //ボタン入力でアイテムのデータを取得をする関数
-        SetAllItem();
-        SetRemoveItem();
+        //SetAllItem();
+        //SetRemoveItem();
+        
     }
 
     private void SetRemoveItem()
@@ -59,19 +64,37 @@ public class Player : MonoBehaviour
         {
             SetAllItem();
         }
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            _itemList.Remove(ItemManager.ITEM.FLAG);
-        }
+        //if (Input.GetKeyDown("enterbutton"))
+        //{
+        //    _itemList.Remove(ItemManager.ITEM.FLAG);
+        //}
     }
 
-    //プレイヤーの歩行速度を生成
+   //プレイヤーの歩行速度を生成
     private void PlayerWallk()
     {
         var wallk = Vector3.zero; //Vector3(0,0,0)を代入で初期化
         wallk.x = Input.GetAxis("Horizontal") + _playerRun;
         wallk.y = Input.GetAxis("Vertical") + _playerRun;
-        transform.position += wallk * Time.deltaTime;
+        if (wallk.y * wallk.y + wallk.x * wallk.x > 0f)
+        {
+            // 4方向にスナップしたいなら360/4で90を渡す
+            var snapped = SnapAngle(new Vector2(wallk.x, wallk.y), 90f * Mathf.Deg2Rad);
+            transform.position += (Vector3)snapped * Time.deltaTime;
+        }
+
+    }
+
+    Vector2 SnapAngle(Vector2 vector, float angleSize)
+    {
+        var angle = Mathf.Atan2(vector.y, vector.x);
+
+        var index = Mathf.RoundToInt(angle / angleSize);
+        var snappedAngle = index * angleSize;
+        var magnitude = vector.magnitude;
+        return new Vector2(
+            Mathf.Cos(snappedAngle) * magnitude,
+            Mathf.Sin(snappedAngle) * magnitude);
     }
 
     //プレイヤーの向きをスティックの入力値で変更する関数
@@ -100,7 +123,7 @@ public class Player : MonoBehaviour
         if (Input.GetAxisRaw("runtrigger1")==1 || Input.GetAxisRaw("runtrigger2")==1) 
         {
             if(Input.GetAxisRaw("Horizontal") ==1)   //スティックを右に倒した判定
-            _playerRun = 3.0f; //加速量
+                _playerRun = 3.0f; //加速量
 
             if (Input.GetAxisRaw("Horizontal") == -1) //スティックを左を倒した判定
                 _playerRun = -3.0f; //加速量
@@ -125,10 +148,7 @@ public class Player : MonoBehaviour
         {
             if (_item != ItemManager.ITEM.NULL) _itemList.Add(currentItem._item); //今さわっているアイテムのデータを取得
             currentItem.GetItem();
-            foreach(ItemManager.ITEM i in _itemList)
-            {
-                Debug.Log("リストのなか:"+i);
-            }
+            SetAllItem();
             Debug.Log("アイテム取得");
             
         }
@@ -167,14 +187,6 @@ public class Player : MonoBehaviour
             _item = collision.GetComponent<Item>()._item;　//さわっているアイテムの情報の呼び出し
             currentItem = collision.GetComponent<Item>();
         }
-
-        //if (Input.GetButton("enterbutton"))
-        //{
-        //    if (collision.tag == "Item")
-        //    {
-        //        collision.gameObject.GetComponent<Item>().GetItem();
-        //    }
-        //}
     }
 
     //衝突したオブジェクトから離れた後の処理
@@ -194,9 +206,12 @@ public class Player : MonoBehaviour
     public void UseItem(ItemManager.ITEM item)
     {
         Debug.Log(item);
-    }
+        gameControl.UseItemCurrentEvent(item);
+        //if(item == ItemManager.ITEM.FLAG)
+        //{
+        //    Debug.Log("サクランボ使ったよ");
 
-    //private  ItemInventry _itemInventry;
-    //  Awake{
-    //          _itemInventry =FindObjetType
+        //}
+    }
+    
 }

@@ -7,6 +7,8 @@ TagManager:
   - FlagEvent
   - Lady
   - TrafficLightsQuestion
+  - Flag
+  - Item
   layers:
   - Default
   - TransparentFX

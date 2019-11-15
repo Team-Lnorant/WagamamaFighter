@@ -7,48 +7,19 @@ public class Lady : MonoBehaviour
     public Vector3 _vec;
     public float _speed;
 
+    private EventManager _eventManager;
+    //public bool _goalMovePoint;
 
-    public void LadyMove()
+    private void Awake()
     {
-        _vec = Vector3.zero;
-        _vec.x += _speed * Time.deltaTime;
-        transform.position += _vec;
+        _eventManager = FindObjectOfType<EventManager>();    
     }
 
-    public void UpLadyMove()
-    {
-        _vec = Vector3.zero;
-        _vec.y += _speed * Time.deltaTime;
-        transform.position += _vec;
-    }
+    public void LadyMove(Vector3 _targetPosition)
+    {      
+        transform.position = 
+            Vector3.MoveTowards(transform.position, _targetPosition, _speed * Time.deltaTime);
 
-    public void DownLadyMove()
-    {
-        _vec = Vector3.zero;
-        _vec.y -= _speed * Time.deltaTime;
-        transform.position += _vec;
-    }
-
-    public void RightLadyMove()
-    {
-        _vec = Vector3.zero;
-        _vec.x += _speed * Time.deltaTime;
-        transform.position += _vec;
-    }
-
-    public void LeftLadyMove()
-    {
-        _vec = Vector3.zero;
-        _vec.x -= _speed * Time.deltaTime;
-        transform.position += _vec;
-    }
-
-
-    public void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.transform.tag == "TrafficLightsQuestion")
-        {
-            
-        }
+        if (transform.position == _targetPosition)return;
     }
 }

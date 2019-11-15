@@ -9,7 +9,7 @@ public class GameControl : MonoBehaviour
 
     private void Awake()
     {
-        _currentEvent = FindObjectOfType<WalkEvent>();
+        _currentEvent = FindObjectOfType<CrosswalkEvent>();
     }
 
     void Start()
@@ -22,9 +22,9 @@ public class GameControl : MonoBehaviour
         EventUpdate();
     }
 
-    public void UseItemCurrentEvent()
+    public void UseItemCurrentEvent(ItemManager.ITEM item)
     {
-        _currentEvent.UseItem();
+        _currentEvent.UseItem(item);
     }
 
     public void ChangeEvent(EventManager eventManager)

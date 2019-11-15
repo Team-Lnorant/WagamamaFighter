@@ -16,6 +16,6 @@ public class WalkEvent : EventManager
 
     public override void UpdateEvent()
     {
-        _lady.LadyMove();
+       
     }
 }

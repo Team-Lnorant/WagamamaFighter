@@ -8,6 +8,7 @@ public class DrinkEvent : EventManager
     private Icon _icon;
     private GameControl _control;
     private WalkEvent _walk;
+    private bool _flag;
 
     private void Awake()
     {
@@ -22,14 +23,18 @@ public class DrinkEvent : EventManager
         //ドリンクアイコン表示
         _icon.SetIconSprit(Icon.EventIcon.THIRSTY);
         _icon.IconTrigger(true);
+        _currentTransNum = 0;
+        _flag = false;
     }
+
     public override void UpdateEvent()
     {
-        //アイテム処理
-        //ThirstyEvent();
-        if (Input.GetKeyDown(KeyCode.A))
-            _control.ChangeEvent(_walk);
-
+        if (_flag)
+        {
+            _lady.LadyMove(_trans[_currentTransNum].position);
+            if (_trans[_currentTransNum].position == _lady.transform.position)
+                _currentTransNum++;
+        }
     }
 
     public override void EndEvent()
@@ -37,18 +42,16 @@ public class DrinkEvent : EventManager
         _icon.IconTrigger(false);
     }
 
-    void ThirstyEvent()
+    public override void UseItem(ItemManager.ITEM item)
     {
-        //アイテム処理
-        switch (0)
+        switch (item)
         {
-            case 0:
-                _control.ChangeEvent(_walk);
+            case ItemManager.ITEM.JUICE:
+                _flag = true;
                 break;
-            //case 1:
-            //    break;
-                
-        } 
-        
+
+            default:
+                break;     
+        }
     }
 }
